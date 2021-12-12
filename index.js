@@ -24,6 +24,7 @@ function invokeAction({ action, id, name, email, phone }) {
 
     case "get":
       contacts.getContactById(id);
+      console.log(id)
       break;
 
     case "add":

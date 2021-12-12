@@ -4,19 +4,17 @@ const path = require("path");
 const contactsPath = path.resolve(__dirname, "./db/contacts.json");
 
 async function listContacts() {
+  
   const contacts = await getContactsFromFile();
   console.table(contacts);
 }
 
 async function getContactById(contactId) {
-  const id = parseInt(contactId);
-  if (isNaN(id)) {
-    console.log("Id shoud be integer.");
-    return;
-  }
 
   const contacts = await getContactsFromFile();
-  const contact = contacts.find((contact) => contact.id === id);
+  // console.log(contacts)
+  const contact = contacts.find((contact) => contact.id === contactId);
+  // console.log(contact)
   if (contact) {
     console.table(contact);
   } else {
@@ -25,14 +23,9 @@ async function getContactById(contactId) {
 }
 
 async function removeContact(contactId) {
-  const id = parseInt(contactId);
-  if (isNaN(id)) {
-    console.log("Id shoud be integer.");
-    return;
-  }
-
+ 
   const contacts = await getContactsFromFile();
-  await saveContactsToFile(contacts.filter((contact) => contact.id !== id));
+  await saveContactsToFile(contacts.filter((contact) => contact.id !== contactId));
   listContacts();
 }
 
@@ -51,7 +44,7 @@ async function addContact(name, email, phone) {
 
 async function getContactsFromFile() {
   try {
-    const result = await fs.readFile(contactsPath, "utf-8");
+    const result = await fs.readFile(contactsPath);
     return JSON.parse(result);
   } catch (error) {
     console.error("Error occured: ", error);
