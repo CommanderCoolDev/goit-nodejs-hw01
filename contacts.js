@@ -1,6 +1,8 @@
 const fs = require("fs/promises");
 const path = require("path");
 
+const { v4 } = require("uuid");
+
 const contactsPath = path.resolve(__dirname, "./db/contacts.json");
 
 async function listContacts() {
@@ -25,8 +27,10 @@ async function getContactById(contactId) {
 async function removeContact(contactId) {
  
   const contacts = await getContactsFromFile();
+  console.log(contacts)
   await saveContactsToFile(contacts.filter((contact) => contact.id !== contactId));
   listContacts();
+  
 }
 
 async function addContact(name, email, phone) {
@@ -36,7 +40,7 @@ async function addContact(name, email, phone) {
   }
 
   const contacts = await getContactsFromFile();
-  const newContact = { id: getNextId(contacts), name, email, phone };
+  const newContact = { id: v4(), name, email, phone };
   contacts.push(newContact);
   await saveContactsToFile(contacts);
   listContacts();
@@ -59,12 +63,6 @@ async function saveContactsToFile(contacts) {
   }
 }
 
-function getNextId(contacts) {
-  let id = 0;
-  if (contacts) {
-    contacts.forEach((contact) => (id = contact.id > id ? contact.id : id));
-  }
-  return id + 1;
-}
+
 
 module.exports = { listContacts, getContactById, removeContact, addContact };
